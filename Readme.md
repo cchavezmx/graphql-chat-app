@@ -2,7 +2,7 @@
 
 
 <ul>
-<li><a href="https://sequelize.org/master/index.html">Sequelize para conectar con ORM y GraphQL<li>
+<li><a href="https://sequelize.org/master/index.html"><h3>Sequelize</h3><li>
 <li><a href="https://github.com/apollographql/apollo-server">Apollo-Server<li>
 <li><a href="https://www.apollographql.com/docs/apollo-server/getting-started/">Apollo-Server DOCS<li>
 </ul>
