@@ -2,12 +2,13 @@
 
 
 <ul>
-<li><a href="https://sequelize.org/master/index.html"><h3>Sequelize</h3><li>
+<li><a><h3>Sequelize</h3><li>
 <li><a href="https://github.com/apollographql/apollo-server">Apollo-Server<li>
 <li><a href="https://www.apollographql.com/docs/apollo-server/getting-started/">Apollo-Server DOCS<li>
 </ul>
 
 ## Sequelize
+[Manual](https://sequelize.org/master/index.html)
 
 Sequelize is a promise-based Node.js ORM for Postgres, MySQL, MariaDB, SQLite and Microsoft SQL Server. It features solid transaction support, relations, eager and lazy loading, read replication and more
 
