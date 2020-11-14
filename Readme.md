@@ -28,17 +28,18 @@ Una vez establecidos los campos que traducira Graphql de la base de datos de Mys
 
 Esta reescribe los campos en la base de datos mysql 
 
-sequelize db:migrate:undo:all
+<strong>sequelize db:migrate:undo:all</strong>
 
 y reescribimos las columnas: 
 
 sequelize db:migrate 
 
-### Ojo db:migrate:undo:all borra toda la tabla, no se debe usar en produccion sin un respaldo
+<h3>Ojo</h3> <strong>db:migrate:undo:all</strong> borra toda la tabla, no se debe usar en produccion sin un respaldo
 
 
-## Variables de entorno se setean dentro de config
-env.json
+## Variables de entorno
+
+env.json dentro de la carpeta config
 
 ````json
 
