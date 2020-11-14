@@ -1,10 +1,8 @@
 ## Manuales
 
-<ul>
-    <li>[Sequelize](https://sequelize.org/master/index.html)</li>
-    <li>[Apollo-Server](https://github.com/apollographql/apollo-server)</li>
-    <li>[Apollo-Docs](https://www.apollographql.com/docs/apollo-server/getting-started/)</li>
-</ul>
+[Sequelize](https://sequelize.org/master/index.html)
+[Apollo-Server](https://github.com/apollographql/apollo-server)
+[Apollo-Docs](https://www.apollographql.com/docs/apollo-server/getting-started/)
 
 
 
