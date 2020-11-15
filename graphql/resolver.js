@@ -9,23 +9,14 @@ const { User } = require('../models')
 
 module.exports = {
 Query: {
-        getUser: async (_, __, context) => {
+        getUser: async (_, __, { user }) => {
         // TODO verificar usuarios conectados
         // Este resolver regresa en un arreglo a las personas que no estan logeadas. 
                     
             try { 
             // let userLogged
             // if(context.req && context.req.headers.autorization)
-            let user
-            if(context.req && context.req.headers.autorization ){
-                const token = context.req.headers.autorization.split('Bearer ')[1]
-                jwt.verify(token, JWT_SECRET, (err, decodeToken) => {
-                    if(err){
-                        throw new AuthenticationError('Error en la sesion', err)
-                    }
-                    user = decodeToken
-                })
-            }
+            if(!user) throw new UserInputError('Unauthenticated')
 
             const users = await User.findAll({
                 where: { username: { [Op.ne]: user.username }}
@@ -78,7 +69,7 @@ Query: {
                 }
 
             } catch (error) {
-                throw new UserInputError('Input Error', { error:  { errors }  })
+                throw new UserInputError('Input Error', { errors })
             }
         },
         
@@ -100,12 +91,12 @@ Query: {
             // Validar que los dos campos de password sean iguales
             if(password !== confirmPassword ) errors.confirmPassword = 'Los passwords no conciden'
 
-            // Revisar sin el usuario existe // email exist
-            // const userByusername = await User.findOne({ where: { username }})
-            // const userByuemail = await User.findOne({ where: { email }})
+            // email exist
+            const userByusername = await User.findOne({ where: { username }})
+            const userByuemail = await User.findOne({ where: { email }})
             
-            // if(userByuemail) errors.email = 'La cuenta de correo ya existe'
-            // if(userByusername) errors.username = 'El usario ya existe'
+            if(userByuemail) errors.email = 'La cuenta de correo ya existe'
+            if(userByusername) errors.username = 'El usario ya existe'
 
             if(Object.keys(errors).length > 0) throw errors
 
@@ -126,10 +117,33 @@ Query: {
                 }else if (err.name === 'SequelizeUniqueConstraintError'){
                     err.errors.forEach(e => (errors[e.path] = `El ${e} ya existe`))
                 }
-                throw new UserInputError('Bad input', { err })
+                throw new UserInputError('Bad input', { errors })
             }
 
-        }
+        },
+        SendMessage: async ( parent, args, { user }) => {
+            
+            const { to, contenet } = args
+
+            try {
+                if(!user) throw new AuthenticationError('Unauthednticated')
+
+                // Revisamos si el buzon del usuario esta disponible
+                const recipient = await User.findOne({ where: { username: to }})
+
+                if(!recipient){
+                    throw new UserInputError('User not found ')
+                } 
+
+                // revisamos que el mensaje no este vacio
+                if(contenet.trim() === ''){
+                    throw new UserInputError('El mensaje no puede estar vacio')
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+        },
     }
 };
 

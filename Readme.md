@@ -48,3 +48,55 @@ env.json dentro de la carpeta config
 }
 
 ````
+
+
+## Version de Sass
+[Documentación](https://github.com/sass/node-sass)
+
+Para trabajar con la version de Node 14 hay que instalar la version 4.14 de sass
+
+```` bash
+
+install node-sass@4.14.1
+
+````
+
+## Agraegamos Apollo Client
+
+[Documentación](https://www.apollographql.com/docs/react/get-started/)
+
+```` javascript
+
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+// Caambiamos la uri por la de nuestro proyecto
+
+import { ApolloClient, InMemoryCache, ApolloProvider as Provider } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:400',
+  cache: new InMemoryCache()
+});
+
+
+export default function ApolloProvider(props){
+    return <Provider client={client} { ...props } />
+}
+
+````
+
+una vez que realizamos el archivo de proveedor, tenemos que envolver toda nuesta app para poder tomar entre componente las variables de Apollo-Server
+las mutation, querys, resolver... etc
+
+
+```` javascript
+
+import { ApolloProvider } from './ApolloProvider'
+
+return (
+    <ApolloProvider>
+        <MiComponente />
+    </ApolloProvider>
+)
+
+```` 

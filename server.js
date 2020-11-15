@@ -7,14 +7,17 @@ const resolvers = require('./graphql/resolver')
 // The GraphQL schema
 const typeDefs= require('./graphql/typeDefs')
 
+// Importamos el archivo de contexto
+const contextMiddleware = require('./utils/contextMiddleware')
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ctx => ctx,
+  context: contextMiddleware,
 });
 
 server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+  console.log(`🚀❤ Server ready at ${url}`);
 
   sequelize.authenticate()
   .then(() => console.log('Database connected!!'))

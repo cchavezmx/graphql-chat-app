@@ -8,7 +8,13 @@ module.exports = gql`
         token: String
         createdAt: String!
     }
-
+    type Message{
+        from: String!
+        to: String!
+        content: String!
+        uuid: String!
+    }
+    
     type Query {
     getUser: [User]!
     login(username: String! password: String!): User!
@@ -16,6 +22,7 @@ module.exports = gql`
 
     type Mutation {
         register(username: String! email: String! password: String! confirmPassword: String!): User!
+        SendMessage(to: String! content: String!): Message!
     }
 `;
 
