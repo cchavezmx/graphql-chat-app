@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs')
-const { UserInputError, AuthenticationError } = require('apollo-server')
+const { UserInputError } = require('apollo-server')
 const jwt = require('jsonwebtoken')
-const { JWT_SECRET } = require('../config/env.json')
+const { JWT_SECRET } = require('../../config/env.json')
 const { Op } = require('sequelize')
 
-const { User } = require('../models')
+const { User } = require('../../models')
 // los modelos se sacan desdel el index 
 
 module.exports = {
@@ -59,7 +59,7 @@ Query: {
                     throw new UserInputError('Input Error', { errors })
                 }
 
-                // ya que revisamos que el todo este bien nos toca encriptar y generar un token para la sesion
+                // ya que revisamos que el todo este bien toca encriptar y generar un token para la sesion
                 const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: 60 * 60 });
 
                 return {
@@ -121,32 +121,11 @@ Query: {
             }
 
         },
-        SendMessage: async ( parent, args, { user }) => {
-            
-            const { to, contenet } = args
-
-            try {
-                if(!user) throw new AuthenticationError('Unauthednticated')
-
-                // Revisamos si el buzon del usuario esta disponible
-                const recipient = await User.findOne({ where: { username: to }})
-
-                if(!recipient){
-                    throw new UserInputError('User not found ')
-                } 
-
-                // revisamos que el mensaje no este vacio
-                if(contenet.trim() === ''){
-                    throw new UserInputError('El mensaje no puede estar vacio')
-                }
-
-            } catch (error) {
-                console.log(error)
-            }
-        },
+        
     }
 };
 
 
 // los mutacion de typeDef pasan como props y son tomados por la variable args, para poder ser usados en los metodos 
 // Pensemos que TypeDef define las rutas y resovler son los metodos que se realizan en estas 
+// Mutation permiten enviar informacion a la base de datos, atravez de sequalize

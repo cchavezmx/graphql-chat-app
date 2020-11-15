@@ -61,7 +61,7 @@ install node-sass@4.14.1
 
 ````
 
-## Agraegamos Apollo Client
+## Agregamos Apollo Client
 
 [Documentación](https://www.apollographql.com/docs/react/get-started/)
 
@@ -98,5 +98,56 @@ return (
         <MiComponente />
     </ApolloProvider>
 )
+
+```` 
+
+
+## Notas: 
+
+<ul>
+<li>El contexto de este proyecto proovee un metodo que toma el valor del token para saber que usuario esta logeado en la aplicacion</li>
+<li></li>
+<li></li>
+</ul>
+
+
+## GraphQL Playground
+
+```` bash 
+mutation register{
+  register(username: "Carlos" email:"carlos@correo.com" password: "123456" confirmPassword: "123456"){
+    username
+  }
+}
+
+query getUser {
+  getUser{
+    username email
+  }
+}
+
+query login{
+  login(username: "Carlos" password:"123456"){
+    username token createdAt
+  }
+}
+
+mutation Message{
+  SendMessage(to: "Dalia" content: "Enviado desde Carlos a Dalia"){
+    content from uuid createdAt
+  }
+}
+
+query getMessages {
+  getMessages(from: "Dalia"){
+    from to content uuid createdAt
+  } 
+}
+
+# Recuerda agregar la cabezera HTTP
+{
+  "Autorization": "Bearer JWT"
+}
+
 
 ```` 

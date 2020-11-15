@@ -13,11 +13,13 @@ module.exports = gql`
         to: String!
         content: String!
         uuid: String!
+        createdAt: String!
     }
     
     type Query {
     getUser: [User]!
     login(username: String! password: String!): User!
+    getMessages(from: String!): [Message]!
     }
 
     type Mutation {
