@@ -4,9 +4,11 @@ module.exports = gql`
 # mutations
     type User {
         username: String!
-        email: String!
+        email: String
         token: String
         createdAt: String!
+        latestMessage: Message
+        imageUrl: String
     }
     type Message{
         from: String!

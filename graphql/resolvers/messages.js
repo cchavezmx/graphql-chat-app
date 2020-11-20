@@ -88,6 +88,3 @@ module.exports = {
 // los mutacion de typeDef pasan como props y son tomados por la variable args, para poder ser usados en los metodos 
 // Pensemos que TypeDef define las rutas y resovler son los metodos que se realizan en estas 
 // Mutation permiten enviar informacion a la base de datos, atravez de sequalize
-
-
-// TODO https://www.youtube.com/watch?v=NTU-vLYNTJQ

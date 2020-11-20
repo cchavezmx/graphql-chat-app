@@ -3,6 +3,7 @@ import { Row, Col, Form, Button } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { gql, useLazyQuery } from '@apollo/client';
 
+import { useAuthDispatch } from '../context/authContext'
 
 const Login = (props) => {
 
@@ -17,19 +18,22 @@ query login($username: String! $password: String!){
 
   const [ errForm, setErrFrom ] = useState({})
 
+  // Usamos useReducer para poder cambiar el estado de del login del usuario, se crea un contexto que envuelve toda la app para poder cambiar de entre estados, se manda el valor de dispatch a travez del authDispatch y hace el cambio de estado
+
+  const dispatch = useAuthDispatch()
+
   const [loginUser, { loading }] = useLazyQuery(LOGIN_USER ,{
     onError: (err) => {
       setErrFrom({})
       setErrFrom(err.graphQLErrors[0].extensions.errors)
     },
     onCompleted: (data) => {
-        localStorage.setItem('Token', data.login.token)
+        dispatch({ type: 'LOGIN', payload: data.login })
         props.history.push('/')
     }
     
   })
 
-  console.log(errForm)
 
     const { register, handleSubmit } = useForm()
 
@@ -40,7 +44,7 @@ query login($username: String! $password: String!){
     return (
         <Row className="bg-white py-5 justify-content-center">
         <Col sm={8} md={6} lg={4}>
-        <h1 className="text-center">Registro</h1>
+        <h1 className="text-center">Login</h1>
        
         <Form onSubmit={handleSubmit(onSubmit)}>
       

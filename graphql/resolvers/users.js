@@ -5,8 +5,8 @@ const { JWT_SECRET } = require('../../config/env.json')
 const { Op } = require('sequelize')
 
 const { User } = require('../../models')
+const { Message } = require('../../models')
 // los modelos se sacan desdel el index 
-
 module.exports = {
 Query: {
         getUser: async (_, __, { user }) => {
@@ -14,13 +14,33 @@ Query: {
         // Este resolver regresa en un arreglo a las personas que no estan logeadas. 
                     
             try { 
-            // let userLogged
-            // if(context.req && context.req.headers.autorization)
+                console.log(user)
             if(!user) throw new UserInputError('Unauthenticated')
 
-            const users = await User.findAll({
+        // seleccionamos la informacion del documento que queremos extraer
+            let users = await User.findAll({
+                attributes: [ 'username', 'imageUrl', 'createdAt'],
                 where: { username: { [Op.ne]: user.username }}
             });
+
+            const allUsersMessages =  await Message.findAll({
+                where: {
+                    [Op.or] : [{ from: user.username }, { to: user.username }]
+                },
+                order: [['createdAt', 'DESC']]
+                
+            })
+            console.log('aca los mensajes del query ', allUsersMessages)
+ 
+            users = users.map(person => {
+                const latestMessage = allUsersMessages.find(
+                    m => m.from === person.username || m.to === person.username
+                )
+                person.latestMessage = latestMessage
+                return person
+            })
+
+
             return users
             
             } catch (err) {
@@ -64,7 +84,7 @@ Query: {
 
                 return {
                     ...user.toJSON(),
-                    createdAt: user.createdAt.toISOString(),
+                    createdAt: user.createdAt,
                     token
                 }
 

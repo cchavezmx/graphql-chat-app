@@ -1,4 +1,4 @@
-## Manuales
+## Readme
 
 
 <ul>
@@ -28,12 +28,19 @@ Una vez establecidos los campos que traducira Graphql de la base de datos de Mys
 
 Esta reescribe los campos en la base de datos mysql 
 
-<strong>sequelize db:migrate:undo:all</strong>
+````shell
+
+sequelize db:migrate:undo:all
+
+````
 
 y reescribimos las columnas: 
 
+````shell
+
 sequelize db:migrate 
 
+````
 <h3>Ojo</h3> <strong>db:migrate:undo:all</strong> borra toda la tabla, no se debe usar en produccion sin un respaldo
 
 
@@ -46,6 +53,24 @@ env.json dentro de la carpeta config
 {
     "JWT_SECRET": "mi clave de entorno"
 }
+
+````
+
+<strong> 1 . - </strong>Para crear base de datos fake
+
+````bash
+
+sequelize seed:generate --name create-users
+
+````
+
+Con este paso se crea una modelo parecido a el de migraciones y pero este sellamara seedes, con este modelo podemos hacer practicas 
+
+<strong> 2 . - </strong>Una vez creados las bases creamos los cambios con el siguiente comando: 
+
+````bash
+
+❯ sequelize db:seed:all
 
 ````
 
@@ -101,15 +126,82 @@ return (
 
 ```` 
 
+## Uso de Use UseReducer y UseContext´
 
-## Notas: 
+Creamos un context para poder compartir metodos y funciones y el useReducer para poder hacer el cambio del login y logout del usuario
 
-<ul>
-<li>El contexto de este proyecto proovee un metodo que toma el valor del token para saber que usuario esta logeado en la aplicacion</li>
-<li></li>
-<li></li>
-</ul>
+````javascript
+import React, { useReducer, createContext, useContext } from 'react'
 
+
+const AuthSatateContext = createContext()
+const AuthDispatchContext = createContext()
+
+
+const authReducer = (state, action) => {
+    switch(action.type){
+        case 'LOGIN':
+            localStorage.setItem('Token', action.payload.token)
+            return{
+                ...state,
+                user: action.payload
+            }
+        case 'LOGOUT':
+            localStorage.removeItem('Token')
+            return{
+                ...state,
+                user: null
+            }
+        default:
+            throw new Error(`Error inesperado ${action.type}`)
+    }
+}
+
+export const AuthProvieder = ({ children }) => {
+    const [ state, dispatch ] = useReducer(authReducer, { user: null })
+
+    return(
+    <AuthDispatchContext.Provider value={dispatch}>
+        <AuthSatateContext.Provider value={state}>
+            { children }
+        </AuthSatateContext.Provider>
+    </AuthDispatchContext.Provider>
+    )
+
+}
+
+
+export const useAuthState = () => useContext(AuthSatateContext)
+export const useAuthDispatch = () => useContext(AuthDispatchContext)
+
+````
+
+## Protegiendo Rutas
+
+Para proterger rutas craemos un componente que redirija hacia el componente con props
+
+```` javascript
+
+import React from 'react'
+import { Route, Redirect } from 'react-router-dom'
+import { useAuthState } from '../context/authContext'
+
+export default function DynamicRouters(props){
+    const { user } = useAuthState()
+
+    if(props.auth && !user){
+        return <Redirect to="/login" />
+    } else if(props.guest && user){
+        return <Redirect to="/" />
+    } else {
+        return <Route component={props.component} { ...props} />
+    }
+}
+
+
+export default App;
+
+````
 
 ## GraphQL Playground
 
@@ -151,3 +243,12 @@ query getMessages {
 
 
 ```` 
+## Notas: 
+
+<ul>
+<li>El contexto de este proyecto proovee un metodo que toma el valor del token para saber que usuario esta logeado en la aplicacion</li>
+<li>El servidor desencripta y encripta el token para poder verificar si el usuario esta conectado, este proceso se lleva acabo en el middleware, el contextMiddleware, revisar si existe la cabezera authorization y setea en este el token, asi, junto este token envia el usuario atravez de destructoracion al query de login
+</li>
+<li>recuerda siempre debuggear sequelize db:seed:all --debug</li>
+<li>window.location.href = '/login' para poder redireccionar a login </li>
+</ul>
