@@ -4,7 +4,7 @@ import Message from './Message'
 import { Col } from 'react-bootstrap'
 
 // Importamos el contexto
-import { useMessageDispatch, useMessageState } from  '../../context/Message'
+import { useMessageState } from  '../../context/Message'
 
 const GET_MESSAGES = gql`
   query getMessages($from: String!){

@@ -16,19 +16,14 @@ const messageReducer = (state, action) => {
                 users: action.payload
             };
 
-        case 'SET_USER_MESSAGES':
-            const { username, message } = action.payload
-            return 
-
         case 'SET_SELECTED_USER':
-            const userCopy = state.users.map(user => ({
+            const usersCopy = state.users.map(user => ({
                 ...user,
                 selected: user.username === action.payload
             }))
-                console.log('context', userCopy)
             return {
                 ...state,
-                user: userCopy
+                users: usersCopy
             }
 
         default:
